@@ -59,7 +59,8 @@ func (r *Git) ListUpstreamCommits(upstreamTagName, downstreamBranchName string) 
 	}
 
 	logIterator, err := r.repo.Log(&git.LogOptions{
-		From: downstreamCommit.Hash,
+		From:  downstreamCommit.Hash,
+		Order: git.LogOrderDFSPost,
 	})
 	if err != nil {
 		return nil, err
