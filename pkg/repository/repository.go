@@ -95,5 +95,10 @@ func (r *Git) ListUpstreamCommits(upstreamTagName, downstreamBranchName string) 
 
 func isEmptyCommit(commit *object.Commit) bool {
 	stats, _ := commit.Stats()
+	// Merge remote-tracking branch 'origin/master' into release-1.14
+	// Godeps/Godeps.json is modified, nothing else, looks like a bug in publisher-bot, lets skip it.
+	if len(stats) == 1 && stats[0].Name == "Godeps/Godeps.json" {
+		return true
+	}
 	return len(stats) == 0
 }
