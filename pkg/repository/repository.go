@@ -80,14 +80,19 @@ func (r *Git) ListUpstreamCommits(upstreamTagName, downstreamBranchName string) 
 		if commit.NumParents() > 1 {
 			return nil
 		}
+		// skip "empty" commits
+		if isEmptyCommit(commit) {
+			return nil
+		}
 		commits = append(commits, commit)
-		commit.Message = ""
-		fIter, _ := commit.Files()
-		fIter.
-			klog.Infof("%+v", commit.Files())
 		return nil
 	}); err != nil {
 		return nil, err
 	}
 	return commits, nil
+}
+
+func isEmptyCommit(commit *object.Commit) bool {
+	stats, _ := commit.Stats()
+	return len(stats) == 0
 }
