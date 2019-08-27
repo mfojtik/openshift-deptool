@@ -33,7 +33,9 @@ func New(repositoryUrl string) (*Git, error) {
 	return r, nil
 }
 
-func (r *Git) ListUpstreamCommits(upstreamTagName, downstreamBranchName string) ([]*object.Commit, error) {
+// ListCarryCommits lists the carry patches applied on top of the upstream tag tracked in the downstream branch.
+// For example the upstreamTagName is 'kubernetes-1.14.0' and the downstreamBranchName is 'oc-4.2-kubernetes-1.14.0'.
+func (r *Git) ListCarryCommits(upstreamTagName, downstreamBranchName string) ([]*object.Commit, error) {
 	upstreamReference, err := r.repo.Tag(upstreamTagName)
 	if err != nil {
 		return nil, fmt.Errorf("failed to checkout tag %q: %v", upstreamTagName, err)

@@ -1,4 +1,4 @@
-package show
+package show_carries
 
 import (
 	"fmt"
@@ -13,17 +13,17 @@ import (
 	"github.com/mfojtik/openshift-deptool/pkg/repository"
 )
 
-type ShowOptions struct {
+type ShowCarriesOptions struct {
 	Repository       string
 	UpstreamTag      string
 	DownstreamBranch string
 }
 
-func NewShow() *cobra.Command {
-	options := &ShowOptions{}
+func NewShowCarriesCommand() *cobra.Command {
+	options := &ShowCarriesOptions{}
 	cmd := &cobra.Command{
-		Use:   "show",
-		Short: "Show current dependency levels and list all cherry picks for repository",
+		Use:   "show-carries",
+		Short: "Filter a set of carry patches applied on top of upstream version of dependency",
 		Run: func(cmd *cobra.Command, args []string) {
 			rand.Seed(time.Now().UTC().UnixNano())
 			if err := options.Complete(); err != nil {
@@ -47,11 +47,11 @@ func NewShow() *cobra.Command {
 	return cmd
 }
 
-func (o *ShowOptions) Complete() error {
+func (o *ShowCarriesOptions) Complete() error {
 	return nil
 }
 
-func (o *ShowOptions) Validate() error {
+func (o *ShowCarriesOptions) Validate() error {
 	if len(o.Repository) == 0 {
 		return fmt.Errorf("repository must be specified")
 	}
@@ -64,12 +64,12 @@ func (o *ShowOptions) Validate() error {
 	return nil
 }
 
-func (o ShowOptions) Run() error {
+func (o ShowCarriesOptions) Run() error {
 	repo, err := repository.New("https://github.com/" + o.Repository)
 	if err != nil {
 		return err
 	}
-	commits, err := repo.ListUpstreamCommits(o.UpstreamTag, o.DownstreamBranch)
+	commits, err := repo.ListCarryCommits(o.UpstreamTag, o.DownstreamBranch)
 	if err != nil {
 		return err
 	}
